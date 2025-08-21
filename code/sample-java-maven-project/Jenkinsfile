@@ -1,30 +1,29 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'   // Jenkins-managed Maven (configure in Jenkins UI)
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 echo "Cloning git repo"
                 git branch: 'main', url: 'https://github.com/deepa0040/jenkins-cicd-pipeline.git'
-                sh 'ls -l'   // List files to debug
+                sh 'ls -l'
             }
         }
 
         stage('Build') {
             steps {
                 echo "Running mvn clean package"
-                sh 'mvn clean package'
+                dir('code/sample-java-maven-project') {
+                    sh 'mvn clean package'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running tests"
-                sh 'mvn test'
+                dir('code/sample-java-maven-project') {
+                    sh 'mvn test'
+                }
             }
         }
     }
