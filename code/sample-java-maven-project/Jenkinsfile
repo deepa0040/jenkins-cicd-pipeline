@@ -4,12 +4,15 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo "clone git repo"
+                ls
                 git branch: 'main', url: ' https://github.com/deepa0040/jenkins-cicd-pipeline.git'
             }
         }
 
         stage('Build') {
             steps {
+                echo "Run mvn clean package"
                 sh 'mvn clean package'
             }
         }
