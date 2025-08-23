@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'   // must match the name in Jenkins "Global Tool Configuration"
+        maven 'Maven3'   // match with your Global Tool Configuration
+    }
+
+    environment {
+        SCANNER_HOME = tool 'SonarScanner'
     }
 
     stages {
@@ -31,9 +35,24 @@ pipeline {
             }
             post {
                 always {
-                    //  Collect test reports (even if none exist)
-                    junit testResults: 'code/sample-java-maven-project/target/surefire-reports/*.xml',
-                          allowEmptyResults: true
+                  junit 'code/sample-java-maven-project/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('MySonarQube') {  // Name you used in Configure System
+                    dir('code/sample-java-maven-project') {
+                        sh '''${SCANNER_HOME}/bin/sonar-scanner \
+                          -Dsonar.projectKey=cicd-demo \
+                          -Dsonar.projectName="CICD Demo" \
+                          -Dsonar.projectVersion=1.0 \
+                          -Dsonar.sources=src \
+                          -Dsonar.java.binaries=target \
+                          -Dsonar.host.url=http://localhost:9000 \
+                          -Dsonar.login=${SONAR_AUTH_TOKEN}'''
+                    }
                 }
             }
         }
@@ -41,7 +60,6 @@ pipeline {
 
     post {
         success {
-            // Save JAR as build artifact
             archiveArtifacts artifacts: 'code/sample-java-maven-project/target/*.jar', fingerprint: true
         }
     }
