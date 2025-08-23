@@ -48,7 +48,7 @@ pipeline {
                           -Dsonar.projectKey=cicd-demo \
                           -Dsonar.projectName="CICD Demo" \
                           -Dsonar.projectVersion=1.0 \
-                          -Dsonar.sources=src \
+                          -Dsonar.sources=. \
                           -Dsonar.java.binaries=target \
                           -Dsonar.host.url=http://localhost:9000 \
                           -Dsonar.login=${SONAR_AUTH_TOKEN}'''
