@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'   // this must match the name in Jenkins "Global Tool Configuration"
+        maven 'Maven3'   // must match the name in Jenkins "Global Tool Configuration"
     }
 
     stages {
@@ -31,11 +31,18 @@ pipeline {
             }
             post {
                 always {
-                    // Won’t fail if no test results exist
+                    //  Collect test reports (even if none exist)
                     junit testResults: 'code/sample-java-maven-project/target/surefire-reports/*.xml',
                           allowEmptyResults: true
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            // Save JAR as build artifact
+            archiveArtifacts artifacts: 'code/sample-java-maven-project/target/*.jar', fingerprint: true
         }
     }
 }
