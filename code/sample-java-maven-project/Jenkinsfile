@@ -43,7 +43,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQubeServer') {  // Name you used in Configure System
+                withSonarQubeEnv('SonarQube') {  // Name you used in Configure System
                     dir('code/sample-java-maven-project') {
                         sh '''${SCANNER_HOME}/bin/sonar-scanner \
                           -Dsonar.projectKey=cicd-demo \
