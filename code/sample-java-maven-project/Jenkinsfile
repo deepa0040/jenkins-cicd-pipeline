@@ -29,6 +29,11 @@ pipeline {
                     sh 'mvn test'
                 }
             }
+            post {
+                always {
+                  junit 'code/sample-java-maven-project/target/surefire-reports/*.xml'
+                }
+              }
         }
     }
 }
