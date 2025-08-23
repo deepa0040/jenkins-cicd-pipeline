@@ -28,17 +28,18 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                dir('code/sample-java-maven-project') {
-                    sh 'mvn test'
+                steps {
+                    dir('code/sample-java-maven-project') {
+                        sh 'mvn test'
+                    }
+                }
+                post {
+                    always {
+                        junit allowEmptyResults: true, testResults: 'code/sample-java-maven-project/target/surefire-reports/*.xml'
+                    }
                 }
             }
-            post {
-                always {
-                  junit 'code/sample-java-maven-project/target/surefire-reports/*.xml'
-                }
-            }
-        }
+
 
         stage('SonarQube Analysis') {
             steps {
